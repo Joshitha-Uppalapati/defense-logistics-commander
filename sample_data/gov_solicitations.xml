@@ -1,0 +1,15 @@
+
+<Solicitations>
+  <RFQ>
+    <Number>RFQ-2025-0004</Number>
+    <Buyer>NAVSUP</Buyer>
+    <DueDate>2025-11-25</DueDate>
+    <Lines>
+      <Line>
+        <NSN>3110-00-100-1234</NSN>
+        <Description>F-35 Bearing</Description>
+        <Quantity>16</Quantity>
+      </Line>
+    </Lines>
+  </RFQ>
+</Solicitations>

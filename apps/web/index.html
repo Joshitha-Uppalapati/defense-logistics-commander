@@ -1,0 +1,74 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Defense Logistics Commander</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module">
+      import axios from 'axios';
+
+      const root = document.getElementById('app');
+      const api = axios.create({ baseURL: 'http://localhost:4000' });
+
+      async function loadRFQs() {
+        const res = await api.get('/rfqs');
+        return res.data;
+      }
+
+      async function createQuote(payload) {
+        const res = await api.post('/quotes', payload);
+        return res.data;
+      }
+
+      function rfqCard(rfq) {
+        const items = rfq.items.map(i => 
+          `<li>${i.part.nsn} - ${i.part.name} × ${i.quantity}</li>`
+        ).join('');
+        return `
+          <div style="border:1px solid #ccc; padding:12px; margin:12px; border-radius:10px;">
+            <h3>${rfq.rfqNumber} • ${rfq.buyer}</h3>
+            <p>Due: ${new Date(rfq.dueDate).toLocaleDateString()}</p>
+            <ul>${items}</ul>
+            <button data-rfq="${rfq.id}">Draft Quote</button>
+          </div>
+        `;
+      }
+
+      function render(rfqs) {
+        root.innerHTML = `
+          <h1>Quoting Workspace</h1>
+          <div>${rfqs.map(rfqCard).join('')}</div>
+          <pre id="out" style="background:#f7f7f7; padding:10px;"></pre>
+        `;
+        document.querySelectorAll('button[data-rfq]').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const rfqId = btn.getAttribute('data-rfq');
+            const rfq = rfqs.find(r => r.id === rfqId);
+            const items = rfq.items.map(i => ({
+              partId: i.partId,
+              quantity: i.quantity,
+              unitPrice: 1000 // demo price
+            }));
+            const payload = {
+              rfqId,
+              supplierId: 'sup_1',
+              leadTimeDays: 21,
+              items
+            };
+            const quote = await createQuote(payload);
+            document.getElementById('out').textContent = 'Created Quote:\n' + JSON.stringify(quote, null, 2);
+          });
+        });
+      }
+
+      loadRFQs().then(render).catch(err => {
+        root.innerHTML = '<p>Failed to load RFQs. Is API running?</p>';
+        console.error(err);
+      });
+    </script>
+  </body>
+</html>

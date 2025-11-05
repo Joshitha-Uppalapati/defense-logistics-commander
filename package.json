@@ -1,0 +1,9 @@
+{
+  "name": "defense-logistics-commander",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "services/*",
+    "packages/*"
+  ]
+}
