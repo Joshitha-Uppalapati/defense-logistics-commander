@@ -1,39 +1,42 @@
+# 🛠 Defense Logistics Commander
 
-AI-native command center for quoting. Ingests ERP & gov solicitations, normalizes RFQs, and turns them into quotes with auditability and fast feedback.
+AI-native full-stack command center for quoting and supply chain automation.  
+Ingests ERP and government solicitation data, normalizes RFQs, and turns them into quotes with traceability and real-time feedback.
 
-**Why it matters**  
-Teams still stitch emails, PDFs, and ERP exports. This replaces that with a single workflow that’s fast, traceable, and easy to extend.
+## Why It Matters
+Defense distributors and manufacturers still manage quotes through emails, PDFs, and outdated ERP exports.  
+This system replaces that manual process with a unified workflow that’s faster, auditable, and easier to extend.
 
-## Quick start
+# Quick Start
+
+### 1. Database (Docker)
 ```bash
-# 1) DB (Docker Desktop running)
 docker compose -f infra/docker-compose.yml up -d
+```
 
-# 2) Prisma
+### 2. Prisma
+```bash
 cd packages/db
 cp .env.example .env
 npx prisma migrate dev --name init
 npx prisma generate
+```
 
-# 3) Seed
+### 3. Seed
+```bash
 psql "postgresql://postgres:postgres@localhost:5432/dlc" -f ../../sql/seed.sql
+```
 
-# 4) API
+### 4. API
+```bash
 cd ../../apps/api
 npm install
-npm run start:dev   
+npm run start:dev
+``` 
 
-# 5) Web
+### 5) Web
+```bash
 cd ../web
 npm install
-npm run dev         
-
-# 6) Ingest 
-cd ../../services/ingestor
-npm install
 npm run dev
-```bash
-cd ~/Library/Mobile\ Documents/com~apple~CloudDocs/Documents/Projects/defense-logistics-commander
-git add README.md
-git commit -m "docs: production-style README with quick start and demo"
-git push
+```  
