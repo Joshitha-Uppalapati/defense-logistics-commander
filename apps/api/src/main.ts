@@ -1,5 +1,4 @@
-
-import express from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { PrismaClient } from '@prisma/client';
 import { z } from 'zod';
@@ -10,9 +9,9 @@ app.use(express.json());
 
 const prisma = new PrismaClient();
 
-app.get('/health', (_, res) => res.json({ ok: true }));
+app.get('/health', (_: Request, res: Response) => res.json({ ok: true }));
 
-app.get('/rfqs', async (_req, res) => {
+app.get('/rfqs', async (_req: Request, res: Response) => {
   const rfqs = await prisma.rFQ.findMany({
     include: { items: { include: { part: true } } }
   });
@@ -30,12 +29,13 @@ const quoteSchema = z.object({
   }))
 });
 
-app.post('/quotes', async (req, res) => {
+app.post('/quotes', async (req: Request, res: Response) => {
   const parsed = quoteSchema.safeParse(req.body);
   if (!parsed.success) return res.status(400).json(parsed.error);
 
   const body = parsed.data;
   const totalPrice = body.items.reduce((s, it) => s + it.quantity * it.unitPrice, 0);
+
   const created = await prisma.quote.create({
     data: {
       supplierId: body.supplierId,
@@ -49,8 +49,7 @@ app.post('/quotes', async (req, res) => {
           unitPrice: it.unitPrice
         }))
       },
-      // naive heuristic for demo
-      winProb: Math.max(0.05, 1 - (body.leadTimeDays / 60)) 
+      winProb: Math.max(0.05, 1 - (body.leadTimeDays / 60))
     },
     include: { items: true }
   });
@@ -70,3 +69,4 @@ app.post('/quotes', async (req, res) => {
 
 const port = process.env.PORT || 4000;
 app.listen(port, () => console.log(`API listening on ${port}`));
+ 
