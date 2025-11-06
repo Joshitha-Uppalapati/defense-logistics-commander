@@ -1,4 +1,3 @@
--- CreateTable
 CREATE TABLE "Supplier" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
@@ -10,7 +9,6 @@ CREATE TABLE "Supplier" (
     CONSTRAINT "Supplier_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
 CREATE TABLE "Part" (
     "id" TEXT NOT NULL,
     "nsn" TEXT NOT NULL,
@@ -22,7 +20,6 @@ CREATE TABLE "Part" (
     CONSTRAINT "Part_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
 CREATE TABLE "RFQ" (
     "id" TEXT NOT NULL,
     "rfqNumber" TEXT NOT NULL,
@@ -36,7 +33,6 @@ CREATE TABLE "RFQ" (
     CONSTRAINT "RFQ_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
 CREATE TABLE "RFQItem" (
     "id" TEXT NOT NULL,
     "rfqId" TEXT NOT NULL,
@@ -47,7 +43,6 @@ CREATE TABLE "RFQItem" (
     CONSTRAINT "RFQItem_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
 CREATE TABLE "Quote" (
     "id" TEXT NOT NULL,
     "supplierId" TEXT NOT NULL,
@@ -63,7 +58,6 @@ CREATE TABLE "Quote" (
     CONSTRAINT "Quote_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
 CREATE TABLE "QuoteItem" (
     "id" TEXT NOT NULL,
     "quoteId" TEXT NOT NULL,
@@ -74,7 +68,6 @@ CREATE TABLE "QuoteItem" (
     CONSTRAINT "QuoteItem_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
 CREATE TABLE "AuditLog" (
     "id" TEXT NOT NULL,
     "actor" TEXT NOT NULL,
@@ -88,26 +81,18 @@ CREATE TABLE "AuditLog" (
     CONSTRAINT "AuditLog_pkey" PRIMARY KEY ("id")
 );
 
--- CreateIndex
 CREATE UNIQUE INDEX "Part_nsn_key" ON "Part"("nsn");
 
--- CreateIndex
 CREATE UNIQUE INDEX "RFQ_rfqNumber_key" ON "RFQ"("rfqNumber");
 
--- AddForeignKey
 ALTER TABLE "RFQItem" ADD CONSTRAINT "RFQItem_rfqId_fkey" FOREIGN KEY ("rfqId") REFERENCES "RFQ"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
--- AddForeignKey
 ALTER TABLE "RFQItem" ADD CONSTRAINT "RFQItem_partId_fkey" FOREIGN KEY ("partId") REFERENCES "Part"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
--- AddForeignKey
 ALTER TABLE "Quote" ADD CONSTRAINT "Quote_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "Supplier"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
--- AddForeignKey
 ALTER TABLE "Quote" ADD CONSTRAINT "Quote_rfqId_fkey" FOREIGN KEY ("rfqId") REFERENCES "RFQ"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
--- AddForeignKey
 ALTER TABLE "QuoteItem" ADD CONSTRAINT "QuoteItem_quoteId_fkey" FOREIGN KEY ("quoteId") REFERENCES "Quote"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
--- AddForeignKey
 ALTER TABLE "QuoteItem" ADD CONSTRAINT "QuoteItem_partId_fkey" FOREIGN KEY ("partId") REFERENCES "Part"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
