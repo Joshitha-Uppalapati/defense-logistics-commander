@@ -68,5 +68,13 @@ app.post('/quotes', async (req: Request, res: Response) => {
 });
 
 const port = process.env.PORT || 4000;
+app.get('/metrics/summary', async (_req, res) => {
+  const [rfqs, quotes, avgLead] = await Promise.all([
+    prisma.rFQ.count(),
+    prisma.quote.count(),
+    prisma.quote.aggregate({ _avg: { leadTimeDays: true } }),
+  ]);
+  res.json({ rfqs, quotes, avgLeadTimeDays: avgLead._avg.leadTimeDays ?? 0 });
+});
 app.listen(port, () => console.log(`API listening on ${port}`));
  
